@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.db
+*.db-wal
+*.db-shm
+.env
+.pytest_cache/
+deck/node_modules/
+data.zip
+*.zip
+eval/latest_eval.json

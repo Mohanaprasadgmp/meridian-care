@@ -1,0 +1,101 @@
+request_id,customer_name,account_tier,status,submitted_at,body
+TR-6008,Perpetua Lindqvist,Standard,new,2026-07-14T16:28:00Z,What's the process to add a second person as an authorized access contact on my unit?
+TR-6014,Guillermo Nakashima,Standard,new,2026-07-15T02:04:00Z,Requesting confirmation of our unit's current climate-control settings.
+TR-6047,Arlo Northrop,Standard,new,2026-07-14T20:22:00Z,Can you clarify how the optional insurance add-on fee is billed?
+TR-6051,Ursula Quintero,Standard,new,2026-07-15T04:10:00Z,Can you confirm what time the facility gates open and close each day?
+TR-6042,Junia van Rensburg,Standard,new,2026-07-15T03:34:00Z,Can you send over our current account balance and payment history?
+TR-6024,Zainab Bramante,Standard,new,2026-07-14T20:58:00Z,Can you send an itemized breakdown of this month's autopay charges?
+TR-6084,Ingrid Novak,Business Elite,new,2026-07-15T02:40:00Z,"One of our stored lamps seems to have a hairline crack, wanted to flag it early."
+TR-6032,Renata Falkenrath,Standard,new,2026-07-14T18:16:00Z,Requesting to swap our unit for one closer to the loading dock.
+TR-6013,Ravi Okonkwo-Hale,Standard,new,2026-07-14T23:04:00Z,"We were charged $22 more than expected for the climate-control upgrade, please review."
+TR-6026,Keegan Karadag,Standard,new,2026-07-14T22:10:00Z,Can you confirm our account is in good standing ahead of our lease renewal?
+TR-6072,Ingrid Lindqvist,Business Elite,new,2026-07-15T10:46:00Z,Can you confirm our account is in good standing ahead of our lease renewal?
+TR-6100,Ines Haddad,Standard,new,2026-07-15T12:34:00Z,Can you confirm our unit's gate access hasn't been affected by the recent system upgrade?
+TR-6037,Desmond Okafor,Standard,new,2026-07-14T14:04:00Z,"I noticed my autopay charge this month was $22.40 more than my usual rent, could someone check and correct it?"
+TR-6096,Marisol Etxeberria,Standard,new,2026-07-15T07:46:00Z,The fire sprinkler head in my unit is dripping onto some of my furniture and I'm flying out of town in about an hour for two weeks -- can someone shut off the water to that unit before I leave?
+TR-6017,Ottoline Fairweather,Standard,new,2026-07-14T13:46:00Z,"Our last autopay top-up seems to be missing $5, can you check the record?"
+TR-6025,Jamal Marchand,Standard,new,2026-07-15T11:22:00Z,What's the process to transfer our reservation to a different facility location?
+TR-6060,Torsten Nakamura,Standard,new,2026-07-14T22:28:00Z,"Our statement came up $17 short of the credit we were expecting, can you check?"
+TR-6011,Desmond Okafor,Standard,new,2026-07-15T11:04:00Z,Can you confirm what time the facility gates close on weekends?
+TR-6078,Bram Villanueva,Standard,new,2026-07-14T17:58:00Z,"Our statement was $34 short this cycle, please look into it."
+TR-6083,Seraphina Duclos,Standard,new,2026-07-14T22:46:00Z,"Wondering if our last statement was $14 off, not totally sure."
+TR-6020,Rosalind Kirkpatrick,Standard,new,2026-07-14T14:58:00Z,I think my card might have been charged twice for this month's unit rental but I'm not totally sure -- could you check our account?
+TR-6028,Selene Achebe,Standard,new,2026-07-15T07:10:00Z,Requesting information on how unit transfers are priced mid-lease.
+TR-6068,Tobias Kwarteng,Standard,new,2026-07-15T09:52:00Z,Requesting a copy of the facility's pest control schedule for our records.
+TR-6091,Wynn Novak,Standard,new,2026-07-14T17:04:00Z,Can you confirm our unit is not scheduled for any lien or auction action?
+TR-6044,Vikram Lachance,Standard,new,2026-07-14T18:34:00Z,Requesting clarification on the process for reporting minor water spotting on stored boxes.
+TR-6027,Ximena Padilla,Standard,new,2026-07-14T23:40:00Z,"Hola, quería preguntar por qué se me cobró dos veces este mes por el alquiler de mi unidad. ¿Podrían revisar mi cuenta y decirme si hay algún error, por favor? Gracias."
+TR-6093,Ilse Van Nuys,Standard,new,2026-07-15T00:34:00Z,"I think there's an $11 error on our statement, can you look into it?"
+TR-6074,Percival Ashdown,Standard,new,2026-07-15T05:22:00Z,Can you confirm the move-out inspection process for when we vacate next month?
+TR-6063,Milo Sorensen,Standard,new,2026-07-15T04:28:00Z,Can you confirm our unit is not scheduled for any lien or auction action?
+TR-6004,Dmitri Ihejirika,Standard,new,2026-07-14T13:28:00Z,Is there a way to see our full autopay deduction history for the year?
+TR-6003,Naomi Fitzwilliam,Standard,new,2026-07-15T05:04:00Z,Can you confirm my unit size is still listed correctly on the account?
+TR-6080,Rosalind Kirkpatrick,Standard,new,2026-07-14T10:46:00Z,Requesting information on the facility's climate-control unit upgrade options.
+TR-6036,Silas Haddad,Standard,new,2026-07-14T17:40:00Z,Can you confirm our account is in good standing ahead of our lease renewal?
+TR-6007,Amara van Rensburg,Standard,new,2026-07-15T09:34:00Z,"One of our stored lamps seems to have a hairline crack, wanted to flag it early."
+TR-6066,Anjali Vantongeren,Standard,new,2026-07-15T11:40:00Z,Requesting a copy of our facility's insurance coverage summary for our unit.
+TR-6064,Dana van Rensburg,Standard,new,2026-07-14T23:58:00Z,Can you confirm what time the facility gates open and close each day?
+TR-6001,Farrukh Marchand,Standard,new,2026-07-14T12:34:00Z,Requesting a copy of last quarter's final statement for our records.
+TR-6038,Renwick Osei,Standard,open,2026-07-15T06:34:00Z,The lock mechanism on my unit is jamming again -- I reported this to regional maintenance about a week ago and it's still not fixed.
+TR-6048,Yara Quintero,Standard,new,2026-07-15T03:52:00Z,Requesting an update on the grace period policy for a missed autopay date.
+TR-6040,Keegan Odom,Standard,new,2026-07-14T07:10:00Z,Requesting to move from our current unit to a larger one on the ground floor.
+TR-6076,Corinne Vantassel,Business Elite,new,2026-07-14T08:40:00Z,"Could someone update the spelling of our company name on the account from 'Vantassel Freight Co' to 'Vantassel Freight Co.'? No rush at all, just tidying up our paperwork."
+TR-6070,Percival Ashdown,Standard,new,2026-07-14T09:16:00Z,"We were charged about $310 too much on our prorated move-out charge last month, please refund the overcharge."
+TR-6052,Marguerite Effiong,Standard,new,2026-07-15T00:52:00Z,Can you confirm our unit is not scheduled for any lien or auction action?
+TR-6039,Renwick Osei,Standard,new,2026-07-15T12:16:00Z,My unit lock isn't opening again.
+TR-6056,Yusuf Blackwood,Standard,new,2026-07-15T09:16:00Z,"Short by about $26 on our last move-in credit, small amount but wanted to flag it."
+TR-6089,Ingrid Ihejirika,Standard,new,2026-07-15T01:46:00Z,Wanted to flag a small tear in the tarp covering some of our stored furniture.
+TR-6034,Magnus Roux,Standard,new,2026-07-15T00:16:00Z,Can you clarify how the optional insurance add-on fee is billed?
+TR-6059,Naomi Fitzwilliam,Standard,new,2026-07-15T07:28:00Z,"We were charged $37.15 too much on our insurance premium autopay this cycle, could you refund the difference?"
+TR-6085,Nadia Whitcombe,Standard,new,2026-07-15T08:04:00Z,I think we were shorted around $7 on our deposit refund last week.
+TR-6049,Ines Boone,Standard,new,2026-07-15T11:58:00Z,Requesting confirmation that our online-signup discount was applied to the final invoice.
+TR-6019,Ottilie Marchetti,Standard,new,2026-07-14T21:34:00Z,What's the process to request a second gate access fob for my unit?
+TR-6041,Rosalind Halvorsen,Standard,new,2026-07-14T16:46:00Z,Requesting to swap our unit for one closer to the loading dock.
+TR-6005,Delphine Ashworth,Standard,new,2026-07-14T18:52:00Z,Not sure if this is right but I think we're owed $8 back from last month's deposit.
+TR-6031,Tobias Valdez,Standard,new,2026-07-14T09:52:00Z,Requesting a copy of last quarter's final statement for our records.
+TR-6069,Tobias van Rensburg,Standard,new,2026-07-14T20:04:00Z,Can you confirm what time the facility gates open and close each day?
+TR-6097,Fenwick Abara,Standard,new,2026-07-14T07:46:00Z,"I think the late fee posted twice this month, only by a couple dollars, can you check?"
+TR-6055,Corinne Vantassel,Business Elite,new,2026-07-14T20:40:00Z,Can you send over the current rate sheet for our business account's additional units?
+TR-6050,Ronan Falkenrath,Standard,new,2026-07-14T23:22:00Z,Can you send an itemized breakdown of this month's autopay charges?
+TR-6098,Anouk Aliyev,Standard,new,2026-07-14T14:22:00Z,Requesting confirmation that our online-signup discount was applied to the final invoice.
+TR-6062,Cormac Karadag,Standard,new,2026-07-14T15:16:00Z,What's the deadline to set up a payment plan for next quarter's rent?
+TR-6035,Ursula Pruitt,Standard,new,2026-07-14T09:34:00Z,Would like to understand the facility's optional tenant insurance coverage limits.
+TR-6081,Ravi Chandrasekaran,Business Elite,new,2026-07-14T19:10:00Z,Would like to understand the facility's optional tenant insurance coverage limits.
+TR-6002,Callan Lachance,Business Elite,new,2026-07-14T11:58:00Z,Requesting information on how to downsize to a smaller unit at the end of our lease.
+TR-6006,Odalys Petrescu,Standard,new,2026-07-15T08:58:00Z,Someone in our building said their autopay was off too -- was ours off by $8 as well?
+TR-6067,Naledi Nwosu,Standard,new,2026-07-14T11:40:00Z,Can you send over our current account balance and payment history?
+TR-6053,Perpetua Lindqvist,Standard,new,2026-07-15T01:10:00Z,"My gate code stopped working this morning. I'm sure I paid my bill on time, so I don't understand why I'd be locked out unless there's some kind of glitch with the keypad system."
+TR-6009,Felix Boone,Standard,new,2026-07-14T08:22:00Z,What's the process if I lose my gate access fob?
+TR-6071,Ottilie Marchetti,Standard,new,2026-07-14T13:10:00Z,"Our last statement seems off somehow, not sure by how much, could someone check our account?"
+TR-6010,Elian Northrop,Standard,new,2026-07-15T06:16:00Z,Requesting information on after-hours access procedures for our unit.
+TR-6012,Callum Bregman,Standard,new,2026-07-14T07:28:00Z,What's the policy on storing a small boat trailer in an outdoor space?
+TR-6023,Milo Petrakis,Standard,new,2026-07-15T02:58:00Z,Requesting more information about how the facility handles pest-related damage claims.
+TR-6090,Oluwaseun Tierney,Standard,new,2026-07-15T10:10:00Z,Can you add a second authorized access contact to our unit's gate profile?
+TR-6075,Ophelia Achterberg,Standard,new,2026-07-15T03:16:00Z,Requesting to swap our unit for one closer to the loading dock.
+TR-6079,Ines Odom,Standard,new,2026-07-14T21:52:00Z,Can I add a second unit under the same account for an upcoming move?
+TR-6099,Junia Renfrew,Standard,new,2026-07-14T19:46:00Z,Requesting an update on the grace period policy for a missed autopay date.
+TR-6095,Ines Northrop,Standard,new,2026-07-15T04:46:00Z,Can I add a second unit under the same account for an upcoming move?
+TR-6058,Jamal Sorensen,Standard,new,2026-07-15T05:40:00Z,Requesting confirmation that our late payment last month didn't affect our account standing.
+TR-6030,Dmitri Quintero,Standard,new,2026-07-14T11:04:00Z,Can you clarify how the optional insurance add-on fee is billed?
+TR-6015,Pieter Novak,Standard,new,2026-07-14T12:16:00Z,Requesting clarification on what happens if a payment is a few days late.
+TR-6092,Ingrid Renfrew,Standard,new,2026-07-14T12:52:00Z,Requesting a copy of last quarter's final statement for our records.
+TR-6022,Vikram Park,Standard,new,2026-07-14T16:10:00Z,Can you add a second authorized access contact to our unit's gate profile?
+TR-6033,Callum Bregman,Standard,new,2026-07-14T21:16:00Z,"I think we got double-charged $40 for a late fee this month, can you check and refund it?"
+TR-6065,Tariq Aliyev,Standard,new,2026-07-14T10:10:00Z,"Noticed a bit of dust and debris in our unit after the recent roof work, wanted to check in."
+TR-6094,Felix Greenwood,Standard,new,2026-07-14T15:52:00Z,Would like to understand the facility's optional tenant insurance coverage limits.
+TR-6018,Niamh Sorensen,Standard,new,2026-07-14T08:04:00Z,Requesting a temporary gate code for a moving crew coming next Tuesday.
+TR-6082,Renata Ashworth,Standard,new,2026-07-14T10:28:00Z,Requesting a temporary gate code for a moving crew coming next Tuesday.
+TR-6016,Wynn Asante,Standard,new,2026-07-14T15:34:00Z,"Noticed a bit of dust and debris in our unit after the recent roof work, wanted to check in."
+TR-6086,Amara Featherstone,Standard,new,2026-07-14T17:22:00Z,I think our insurance add-on charge was $13 too high this month.
+TR-6043,Bertrand Achinello,Standard,new,2026-07-15T05:58:00Z,Our reimbursement for the returned lock deposit was $6 less than we submitted.
+TR-6087,Marlon Beaumont,Standard,new,2026-07-14T14:40:00Z,"Autopay charge seemed $9 short of what we usually pay, please check."
+TR-6054,Tobias Kwarteng,Standard,new,2026-07-15T01:28:00Z,There's water actively pooling on the floor of my unit and it's already ruined several boxes -- I can smell mold starting and I'm worried about the rest of my belongings.
+TR-6088,Renwick Osei,Standard,closed,2026-07-14T11:22:00Z,"My unit's padlock hasp was jammed and wouldn't open last month. Facility staff came out and replaced the hasp the same day, all resolved now."
+TR-6021,Ximena Padilla,Standard,new,2026-07-15T06:52:00Z,"Requesting a copy of my current lease agreement for my records, whenever convenient."
+TR-6061,Felix Kessler,Standard,new,2026-07-15T08:40:00Z,Requesting confirmation that our online-signup discount was applied to the final invoice.
+TR-6057,Guillermo Nakashima,Standard,new,2026-07-14T19:28:00Z,"URGENT -- we were charged $29.50 for a lock-replacement fee we never asked for, and our balance auto-drafts again tomorrow, please fix this before then."
+TR-6046,Petra Longbottom,Standard,new,2026-07-15T12:52:00Z,"The autopay charge on our account looked about $5 higher than usual, can you double-check?"
+TR-6073,Anjali Vantongeren,Standard,new,2026-07-15T10:28:00Z,"Between the mix-up on our account and the hassle it's caused, I think $210 back would make this right -- can you just refund that?"
+TR-6077,Soo-Jin Kessler,Standard,new,2026-07-15T02:22:00Z,Requesting to swap our unit for one closer to the loading dock.
+TR-6029,Priyanka Nwosu,Standard,new,2026-07-14T08:58:00Z,Is there a way to see our full autopay deduction history for the year?
+TR-6045,Marisol Etxeberria,Standard,new,2026-07-15T08:22:00Z,What's the process for reserving a dolly or moving cart at the facility?

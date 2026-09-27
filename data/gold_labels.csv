@@ -1,0 +1,101 @@
+request_id,category,alt_categories,priorities,expected_action,credit_amount,note
+TR-6008,G,,P3|P4,route,,process question: add access contact
+TR-6014,*,,P3|P4,route,,off-taxonomy: climate-control settings
+TR-6047,B,D,P3|P4,route,,insurance fee billing question
+TR-6051,G,,P3|P4,route,,gate hours
+TR-6042,B,L,P3|P4,route,,balance and payment history
+TR-6024,B,,P3|P4,route,,itemized autopay
+TR-6084,D,,P3|P4,route,,minor damage flagged early (Business Elite)
+TR-6032,T,,P3|P4,route,,unit swap
+TR-6013,B,,P2|P3,credit,22.75,claims $22; record 22.75
+TR-6026,L,B,P3|P4,route,,good standing check
+TR-6072,L,B,P3|P4,route,,good standing check (Business Elite)
+TR-6100,G,,P3|P4,route,,gate access after upgrade
+TR-6037,B,,P2|P3,credit,22.40,exact match
+TR-6096,D,,P1,route,,EMERGENCY sprinkler leak; tenant leaving in 1 hour
+TR-6017,B,,P2|P3,credit,4.85,claims $5; record 4.85
+TR-6025,T,,P3|P4,route,,reservation transfer process
+TR-6060,B,,P2|P3,credit,17.10,claims $17; record 17.10
+TR-6011,G,,P3|P4,route,,gate weekend hours (same tenant as TR-6037 - related not duplicate)
+TR-6078,B,,P2|P3,credit,33.90,claims $34; record 33.90
+TR-6083,B,,P2|P3|P4,credit|route,13.55,hedged $14; record 13.55
+TR-6020,B,,P2|P3,route,,vague double charge; record NEGATIVE -338.90 (tenant owes)
+TR-6028,T,B,P3|P4,route,,transfer pricing question
+TR-6068,*,D,P3|P4,route,,off-taxonomy: pest control schedule
+TR-6091,L,,P3|P4,route,,confirm no lien/auction
+TR-6044,D,,P3|P4,route,,process for reporting minor spotting
+TR-6027,B,,P2|P3,route,,Spanish double charge; no billing record
+TR-6093,B,,P2|P3,credit,11.85,claims $11; record 11.85
+TR-6074,T,,P3|P4,route,,move-out inspection process
+TR-6063,L,,P3|P4,route,,confirm no lien/auction
+TR-6004,B,,P3|P4,route,,autopay history
+TR-6003,*,,P3|P4,route,,off-taxonomy: unit size on account
+TR-6080,*,T,P3|P4,route,,off-taxonomy: climate-control upgrade options
+TR-6036,L,B,P3|P4,route,,good standing check
+TR-6007,D,,P3|P4,route,,minor damage flagged early
+TR-6066,D,B,P3|P4,route,,insurance coverage summary
+TR-6064,G,,P3|P4,route,,gate hours
+TR-6001,B,,P3|P4,route,,statement copy
+TR-6038,G,,P1|P2,route,,repeat unresolved lock jam (source status open)
+TR-6048,L,B,P3|P4,route,,grace period policy
+TR-6040,T,,P3|P4,route,,upsize request
+TR-6076,*,B,P4,route,,off-taxonomy: company name spelling; explicitly no rush (Business Elite must not bump)
+TR-6070,B,,P2|P3,pending_approval,308.60,claims ~$310; record 308.60 > cap -> human approval
+TR-6052,L,,P3|P4,route,,confirm no lien/auction (NOT the billing-record Marguerite Solheim)
+TR-6039,G,,P1|P2,close_duplicate,,duplicate of open TR-6038 (same tenant same lock)
+TR-6056,B,,P2|P3,credit,26.50,claims ~$26; record 26.50
+TR-6089,D,,P3|P4,route,,minor damage
+TR-6034,B,D,P3|P4,route,,insurance fee billing question
+TR-6059,B,,P2|P3,credit,37.15,exact match
+TR-6085,B,,P2|P3,credit,6.75,claims ~$7; record 6.75
+TR-6049,B,,P3|P4,route,,discount confirmation
+TR-6019,G,,P3|P4,route,,second fob
+TR-6041,T,,P3|P4,route,,unit swap
+TR-6005,B,,P2|P3|P4,route,,claims $8; record 0.00 -> no credit
+TR-6031,B,,P3|P4,route,,statement copy
+TR-6069,G,,P3|P4,route,,gate hours
+TR-6097,B,,P2|P3|P4,route|credit,3.75,'a couple dollars' is vague; record 3.75
+TR-6055,B,T,P3|P4,route,,rate sheet (Business Elite)
+TR-6050,B,,P3|P4,route,,itemized autopay
+TR-6098,B,,P3|P4,route,,discount confirmation
+TR-6062,L,B,P3|P4,route,,payment plan deadline
+TR-6035,D,,P3|P4,route,,insurance coverage limits
+TR-6081,D,,P3|P4,route,,insurance coverage limits (Business Elite)
+TR-6002,T,,P3|P4,route,,downsize at lease end
+TR-6006,B,,P3|P4,route,,hearsay $8; record 0.00 -> no credit
+TR-6067,B,,P3|P4,route,,balance and history
+TR-6053,G,L,P1|P2,route,,gate code stopped working - lockout
+TR-6009,G,,P3|P4,route,,lost fob process
+TR-6071,B,,P2|P3|P4,route,,'not sure by how much' -> not specific
+TR-6010,G,,P3|P4,route,,after-hours access
+TR-6012,*,T,P3|P4,route,,off-taxonomy: boat trailer storage policy
+TR-6023,D,,P3|P4,route,,pest damage claims process
+TR-6090,G,,P3|P4,route,,add access contact
+TR-6075,T,,P3|P4,route,,unit swap
+TR-6079,T,,P3|P4,route,,add second unit
+TR-6099,L,B,P3|P4,route,,grace period policy
+TR-6095,T,,P3|P4,route,,add second unit
+TR-6058,L,,P3|P4,route,,late payment standing
+TR-6030,B,D,P3|P4,route,,insurance fee billing question
+TR-6015,L,,P3|P4,route,,late payment policy
+TR-6092,B,,P3|P4,route,,statement copy
+TR-6022,G,,P3|P4,route,,add access contact
+TR-6033,B,,P2|P3,route,,claims $40 double late fee; record 0.00 -> no credit
+TR-6065,D,,P3|P4,route,,dust after roof work
+TR-6094,D,,P3|P4,route,,insurance coverage limits
+TR-6018,G,,P3|P4,route,,temporary gate code for movers
+TR-6082,G,,P3|P4,route,,temporary gate code for movers
+TR-6016,D,,P3|P4,route,,dust after roof work
+TR-6086,B,,P2|P3,credit,12.90,claims $13; record 12.90
+TR-6043,B,,P2|P3,credit,6.40,claims $6; record 6.40
+TR-6087,B,,P2|P3,credit,9.20,claims $9; record 9.20
+TR-6054,D,,P1,route,,EMERGENCY active water + mold
+TR-6088,G,,,skip,,already closed in source data (history only)
+TR-6021,*,T,P4,route,,off-taxonomy: lease copy; whenever convenient
+TR-6061,B,,P3|P4,route,,discount confirmation
+TR-6057,B,,P1|P2,credit,29.50,exact match + auto-draft tomorrow (real deadline)
+TR-6046,B,,P2|P3,credit,4.60,claims ~$5; record 4.60
+TR-6073,B,,P2|P3|P4,route,,goodwill demand $210; record 33.85 -> never pay claimed amount
+TR-6077,T,,P3|P4,route,,unit swap
+TR-6029,B,,P3|P4,route,,autopay history
+TR-6045,T,,P3|P4,route,,dolly reservation

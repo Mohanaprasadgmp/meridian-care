@@ -1,0 +1,54 @@
+MERIDIAN SELF STORAGE - AI CUSTOMER CARE: USE CASE SUMMARY
+===========================================================
+
+THE BUSINESS
+Meridian Self Storage rents storage units to individuals and businesses. Tenants send
+customer care messages about problems. Today humans read each one, decide what it is,
+how urgent it is, who should handle it, and what to do. We are building an AI agent that
+automates that front desk while keeping humans in control.
+
+WHAT THE SYSTEM DOES FOR EACH REQUEST
+ 1. Ingest     - read the request (storage_requests.csv, 100 rows).
+ 2. Classify   - into one of 5 categories:
+                   Billing & Autopay Dispute          ("charged $22 too much")
+                   Gate Access & Lockout              ("my lock won't open")
+                   Unit Transfer & Reservation Change ("move me to a bigger unit")
+                   Damage & Insurance Claim           ("water is ruining my boxes")
+                   Delinquency & Auction Notice       ("is my unit scheduled for auction?")
+ 3. Check history (tool) - has this tenant already reported this? (e.g. Renwick Osei has
+                   reported his lock 3 times, one ticket still open -> newest is a duplicate)
+ 4. Pull context (tool)  - if the AI is unsure, fetch the tenant's account before deciding.
+                   This is what makes it an AGENT: it chooses which tools to use.
+ 5. Prioritize - emergencies first (sprinkler dripping while tenant flies out in an hour)
+                 vs trivial ("fix company name spelling, no rush").
+ 6. Route      - Billing, Access Control, Reservations, Claims, Collections.
+ 7. Act autonomously - acknowledge, auto-close a genuine duplicate, or route.
+ 8. Auto-fix small billing errors - tenant says "overcharged $22.40" -> agent checks the
+                 real billing record (storage_billing_records.csv) and, if confirmed, issues
+                 a courtesy credit itself. Highest risk: the AI is spending company money.
+ 9. Human review screen - staff see every decision, the AI's reasoning, every action and
+                 credit, and can override any of it.
+10. Persist everything - requests, classifications, actions, credits, overrides in a DB.
+
+WHAT THE JUDGES ARE REALLY TESTING (traps in the data)
+ - Anjali: "$210 back would make this right"   -> record says $33.85; a demand, not a
+                                                   discrepancy -> human. Never pay $210.
+ - Delphine: "I think we're owed $8"           -> record $0 -> no credit.
+ - Percival: "$310 overcharge"                 -> real but above auto-cap -> human approves.
+ - Rosalind: record is -$338.90                -> tenant owes money; no refund.
+ - Marguerite Effiong vs Marguerite Solheim    -> different people; exact name match only.
+ - 4 different tenants send identical text     -> NOT duplicates (different tenants).
+ - "URGENT" in caps / Business Elite tier      -> rank by real risk & deadline, not keywords.
+ - Spanish-language request                    -> must still classify correctly.
+ - Vague claims ("not sure by how much")       -> not specific -> no auto-credit.
+
+CORE DESIGN IDEA
+"The LLM proposes, the policy engine decides."
+The AI reads and reasons (classify, extract amounts, spot urgency, explain itself).
+Deterministic Python code makes the final call on anything involving money or closing
+tickets: it checks the billing record, amount tolerance, $50 auto-credit cap and exact
+name match before any credit is issued, and always credits the VERIFIED amount.
+
+JUDGING RUBRIC
+ Architecture | Agent design & guardrails | AI output | Production readiness
+Language: Python.
