@@ -1,2 +1,8 @@
 $env:PYTHONPATH="src"
 .\.venv\Scripts\python.exe -m meridian check-llm
+
+.\.venv\Scripts\python.exe -m meridian run --id TR-6008
+.\.venv\Scripts\python.exe -m meridian run --workers 1
+.\.venv\Scripts\python.exe -m meridian run --retry-failed --workers 1
+.\run.ps1 eval
+.\run.ps1 app
