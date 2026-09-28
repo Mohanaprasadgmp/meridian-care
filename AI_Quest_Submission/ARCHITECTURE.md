@@ -1,3 +1,4 @@
+<!-- Original path: docs/ARCHITECTURE.md -->
 # Meridian Care: AI Triage Agent Architecture
 
 ## 1. Problem
