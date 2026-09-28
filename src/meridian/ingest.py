@@ -38,6 +38,7 @@ def ingest(requests_csv: Path, billing_csv: Path) -> dict:
                 status=row["status"] or "new",
                 submitted_at=datetime.fromisoformat(row["submitted_at"].replace("Z", "+00:00")),
                 body=row["body"][:5000],  # bound input size
+                source="csv",
             ))
             stats["requests_new"] += 1
         for row in _read(billing_csv, REQUIRED_BILLING_COLS):

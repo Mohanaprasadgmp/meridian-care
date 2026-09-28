@@ -9,10 +9,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 from ..config import Settings, get_settings
-from ..db import Action, AgentRun, Request, SessionLocal, ToolCall
+from ..db import Action, AgentRun, Request, SessionLocal, ToolCall, utcnow
 from ..llm import LLMClient, get_llm
 from ..models import ActionType, RequestStatus, Team
 from ..observability import estimate_cost, log
@@ -30,11 +30,24 @@ def render_request(r: Request) -> str:
     # Metadata is trusted (from our DB); the body is untrusted tenant text, fenced and labelled as data.
     return (f"Triage this request.\n\nrequest_id: {r.request_id}\ncustomer_name: {r.customer_name}\n"
             f"account_tier: {r.account_tier}\nsubmitted_at: {r.submitted_at.isoformat()}\n"
-            f"current_status: {r.status}\n\n<tenant_request>\n{r.body}\n</tenant_request>")
+            f"current_status: {r.source_status or r.status}\n\n<tenant_request>\n{r.body}\n</tenant_request>")
+
+
+def claim_request(request_id: str) -> bool:
+    """Atomically move new/open -> processing. Exactly one caller wins, across threads, processes and replicas."""
+    with SessionLocal() as s:
+        res = s.execute(update(Request)
+                        .where(Request.request_id == request_id, Request.status.in_(["new", "open"]))
+                        .values(status=RequestStatus.PROCESSING.value, claimed_at=utcnow()))
+        s.commit()
+        return res.rowcount == 1
 
 
 def triage_request(request_id: str, llm: Optional[LLMClient] = None, settings: Optional[Settings] = None) -> dict:
     settings = settings or get_settings()
+    if not claim_request(request_id):   # already taken by another worker, or already triaged
+        return {"request_id": request_id, "status": "skipped", "steps": 0, "cost_usd": 0.0, "latency_ms": 0,
+                "priority": None, "team": None, "category": None, "request_status": None}
     llm = llm or get_llm(settings.llm_provider)
     system = load_prompt(settings.prompt_version)
     started = time.perf_counter()

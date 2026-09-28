@@ -96,6 +96,46 @@ sequenceDiagram
 | `route_request` | final action | The team comes from policy, not from the LLM |
 | `close_as_duplicate` | final action | Same tenant, earlier, still open; not P1 into a lower priority |
 
+## 2b. Customer chat: a second agent
+
+Tenants now raise issues themselves through a chat. The CSV loader stays for bulk and evaluation data, and every request is tagged `source = chat | csv`.
+
+```mermaid
+flowchart LR
+    C[Customer<br/>logged in] -- message --> CIA1[Customer Interaction Agent<br/>intake]
+    CIA1 -- submit_service_request --> R[(requests<br/>status=new, source=chat,<br/>conversation_id)]
+    R -- atomic claim --> W[Triage worker]
+    W --> TA[Triage Agent<br/>unchanged]
+    TA -- outcome --> CIA2[Customer Interaction Agent<br/>reply]
+    CIA2 -- guarded reply --> M[(chat_messages<br/>same conversation)]
+    M -- 3 s refresh --> C
+```
+
+**Why two agents now.** The two jobs are different, and the split earns its cost:
+- The **Customer Interaction Agent** faces the customer. It understands the real need, asks a clarifying question when the message is vague, and doesn't open tickets for small talk. It writes a friendly reply in the customer's language.
+- The **Triage Agent** faces operations. It classifies, prioritises and routes the request, and can issue a credit.
+
+They never call each other directly. They hand off through the database, which acts as a durable queue, so a crash loses nothing and each side scales on its own.
+
+**Routing replies to the right customer.** The browser session is never used as identity:
+- Each chat thread is a `conversation` owned by exactly one customer account (a UUID).
+- A chat request stores its `conversation_id` and `customer_user_id`.
+- The worker writes the reply into that conversation.
+- Every read checks ownership (`chat.py`).
+
+Hundreds of customers can chat at once, each sees only their own messages, and the history survives a refresh or logout.
+
+**Concurrency.** Each request is claimed with a conditional `UPDATE ... WHERE status IN ('new','open')`, and each notification with `WHERE customer_notified_at IS NULL`. Any number of worker threads, processes or replicas can therefore run: every request is triaged once and every customer is notified once. Claims stuck for more than 10 minutes are re-queued. The Streamlit process runs one embedded worker, and `python -m meridian worker` adds more. For hundreds of concurrent users, switch to PostgreSQL (a URL change) and run several app replicas.
+
+**Guardrails for the Interaction Agent:**
+- The customer's name and tier come from the account set up by an administrator, never from the chat. A customer can't claim another tenant's billing record.
+- The request body is the customer's own words, verbatim, never LLM text.
+- A message may only mention a dollar amount the customer wrote themselves, or a credit that was actually issued. There are no refund promises.
+- Limits: 2,000 characters per message and 5 tickets per customer per hour.
+- If the LLM fails, a template reply is used and the issue is still logged.
+
+**Access.** The landing page has a customer portal and an administrator portal. An account can only sign in to its own portal. Customer accounts are created by administrators in the **Customers** tab or with `create-user --role customer`.
+
 ## 3. Guardrails (defence in depth)
 1. **Money:**
    - The credit amount always comes from the verified billing record. The tool has no amount argument, so neither prompt injection nor model error can change it.

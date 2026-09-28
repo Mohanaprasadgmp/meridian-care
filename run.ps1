@@ -1,4 +1,4 @@
-# Convenience runner for Windows. Usage: .\run.ps1 setup|deck-setup|reset|triage|eval|app|test
+# Convenience runner for Windows. Usage: .\run.ps1 setup|deck-setup|reset|triage|eval|app|worker|test
 #
 # Dependency source: set ARTIFACTORY_PYPI_URL (and ARTIFACTORY_NPM_URL for the slide builder) in .env to
 # install from your organisation's Artifactory instead of the public registries. Leave blank for public PyPI/npm.
@@ -54,7 +54,8 @@ switch ($cmd) {
   "reset"  { & $py -m meridian init --reset; & $py -m meridian ingest }
   "triage" { & $py -m meridian run }
   "eval"   { & $py -m meridian eval --out eval\latest_eval.json }
-  "app"    { & $py -m streamlit run app\streamlit_app.py }
+  "app"    { & $py -m streamlit run app\streamlit_app.py }   # also runs one embedded triage worker
+  "worker" { & $py -m meridian worker }                      # extra workers for more throughput
   "test"   { & $py -m pytest -q }
-  default  { Write-Output "usage: .\run.ps1 setup|deck-setup|reset|triage|eval|app|test" }
+  default  { Write-Output "usage: .\run.ps1 setup|deck-setup|reset|triage|eval|app|worker|test" }
 }

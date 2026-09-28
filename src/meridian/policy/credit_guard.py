@@ -16,7 +16,7 @@ ELIGIBLE_KINDS = {ClaimKind.OVERCHARGE, ClaimKind.UNDERCREDIT, ClaimKind.DUPLICA
 
 @dataclass
 class CreditDecision:
-    outcome: str                      # "issue" | "pending_approval" | "deny"
+    outcome: str                      # "issue" | "offer" | "pending_approval" | "deny"
     amount: Optional[float] = None
     checks: list[tuple[str, bool, str]] = field(default_factory=list)
 
@@ -24,13 +24,19 @@ class CreditDecision:
     def failed(self) -> list[str]:
         return [f"{name}: {detail}" for name, ok, detail in self.checks if not ok]
 
+    @property
+    def failed_rules(self) -> list[str]:
+        return [name for name, ok, _ in self.checks if not ok]
+
     def as_dict(self) -> dict:
         return {"outcome": self.outcome, "amount": self.amount,
                 "checks": [{"rule": n, "passed": ok, "detail": d} for n, ok, d in self.checks]}
 
 
 def evaluate_credit(cls: Classification, record_amount: Optional[float], prior_credit_exists: bool,
-                    settings: Settings) -> CreditDecision:
+                    settings: Settings, can_offer: bool = False) -> CreditDecision:
+    """can_offer: the customer is in a live chat and can confirm, so a claim that differs from the verified
+    record (and nothing else wrong) becomes an OFFER of the verified amount instead of a denial."""
     d = CreditDecision(outcome="deny")
     claimed = cls.claimed_amount
 
@@ -56,6 +62,10 @@ def evaluate_credit(cls: Classification, record_amount: Optional[float], prior_c
                   f"|{claimed:.2f} - {record_amount:.2f}| = {abs(claimed - record_amount):.2f} (tolerance {tol:.2f})")
     check("no_prior_credit", not prior_credit_exists, "customer already has a courtesy credit" if prior_credit_exists else "none")
 
+    if d.failed_rules == ["claim_matches_record"] and can_offer and record_amount <= settings.credit_auto_cap:
+        d.amount = round(record_amount, 2)          # always the VERIFIED figure, never the claim
+        d.outcome = "offer"
+        return d
     if d.failed:
         return d
     d.amount = round(record_amount, 2)
@@ -66,3 +76,21 @@ def evaluate_credit(cls: Classification, record_amount: Optional[float], prior_c
     d.checks.append(("within_auto_cap", True, f"{record_amount:.2f} <= cap {settings.credit_auto_cap:.2f}"))
     d.outcome = "issue"
     return d
+
+
+# Customer-safe explanation codes: the Interaction Agent may say WHY, never the internal thresholds
+_REASONS = [("no_prior_credit", "already_credited"), ("claim_kind_eligible", "compensation_request"),
+            ("claim_is_specific", "needs_specific_amount"), ("billing_record_exact_match", "no_discrepancy_found"),
+            ("record_confirms_discrepancy", "no_discrepancy_found"), ("claim_matches_record", "claim_differs_from_record")]
+
+
+def credit_reason(outcome: str, failed_rules: list[str], record_amount: Optional[float] = None) -> str:
+    if outcome == "issue":
+        return "verified"
+    if outcome == "offer":
+        return "offer_verified_amount"
+    if outcome == "pending_approval":
+        return "above_auto_limit"
+    if "record_confirms_discrepancy" in failed_rules and record_amount is not None and record_amount < 0:
+        return "balance_owed"
+    return next((code for rule, code in _REASONS if rule in failed_rules), "needs_review")

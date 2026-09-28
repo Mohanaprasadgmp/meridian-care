@@ -38,6 +38,19 @@ class Settings(BaseSettings):
     max_agent_steps: int = 8
     workers: int = 4
 
+    # Customer chat + Customer Interaction Agent
+    interaction_prompt_version: str = "interaction_v1"
+    chat_max_chars: int = 2000               # per customer message
+    chat_max_requests_per_hour: int = 5      # per customer: stops ticket flooding
+    chat_history_messages: int = 12          # context window the Interaction Agent sees
+
+    # Background triage worker (processes chat requests; CSV stays manual via CLI / console button)
+    embedded_worker: bool = True             # run one worker thread inside the Streamlit process
+    worker_poll_s: float = 2.0
+    worker_threads: int = 2
+    worker_sources: str = "chat"             # comma list: "chat" or "chat,csv"
+    processing_timeout_s: int = 600          # a request stuck in "processing" this long is re-queued
+
     # Policy thresholds
     context_confidence_threshold: float = 0.75   # below -> must pull customer context
     human_triage_threshold: float = 0.55         # final confidence below -> Human Triage, no autonomy

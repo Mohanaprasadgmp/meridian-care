@@ -67,6 +67,8 @@ class Team(str, Enum):
 class RequestStatus(str, Enum):
     NEW = "new"
     OPEN = "open"
+    PROCESSING = "processing"
+    AWAITING_CUSTOMER = "awaiting_customer"
     ACKNOWLEDGED = "acknowledged"
     ROUTED = "routed"
     RESOLVED = "resolved"

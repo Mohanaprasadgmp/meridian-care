@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import (JSON, DateTime, Float, ForeignKey, Integer, String, Text,
+from sqlalchemy import (JSON, DateTime, Float, ForeignKey, Integer, String, Text, inspect, text,
                         UniqueConstraint, create_engine, event)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
@@ -35,6 +35,34 @@ class Request(Base):
     duplicate_of: Mapped[Optional[str]] = mapped_column(String(32))
     human_reviewed: Mapped[bool] = mapped_column(default=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+    # Intake channel: "csv" (bulk seed/eval data) or "chat" (raised by a logged-in customer)
+    source: Mapped[str] = mapped_column(String(8), default="csv", index=True)
+    customer_user_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"), index=True)
+    conversation_id: Mapped[Optional[str]] = mapped_column(ForeignKey("conversations.id"), index=True)
+    intake_summary: Mapped[Optional[str]] = mapped_column(Text)            # Interaction Agent's one-line summary
+    claimed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    customer_notified_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+
+
+class Conversation(Base):
+    """One chat thread. Owned by exactly one customer account: replies are routed by this id."""
+    __tablename__ = "conversations"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)          # uuid4
+    customer_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    last_activity_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))   # hidden by the customer;
+    # kept (not dropped) because its tickets, messages and audit trail still belong to the admin record
+
+
+class ChatMessage(Base):
+    __tablename__ = "chat_messages"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    conversation_id: Mapped[str] = mapped_column(ForeignKey("conversations.id"), index=True)
+    sender: Mapped[str] = mapped_column(String(16))                       # "customer" | "assistant"
+    content: Mapped[str] = mapped_column(Text)
+    request_id: Mapped[Optional[str]] = mapped_column(ForeignKey("requests.request_id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
 class BillingRecord(Base):
@@ -133,6 +161,21 @@ class Override(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+class User(Base):
+    """Console login. Only a salted PBKDF2 hash is stored, never the password."""
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String(256))
+    role: Mapped[str] = mapped_column(String(16), default="admin")        # "admin" | "customer"
+    display_name: Mapped[Optional[str]] = mapped_column(String(128))       # customers: tenant name (billing match)
+    account_tier: Mapped[Optional[str]] = mapped_column(String(32))
+    failed_attempts: Mapped[int] = mapped_column(Integer, default=0)
+    locked_until: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    last_login_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 _engine = None
 _Session = None
 
@@ -160,11 +203,34 @@ def SessionLocal():
     return _Session()
 
 
+# Backfills for columns added after a database was first created (existing rows would otherwise be NULL)
+_BACKFILL = {("requests", "source"): "'csv'", ("users", "role"): "'admin'"}
+
+
+def _migrate(engine) -> None:
+    """Additive, idempotent migration: ADD COLUMN for any model column missing from an existing table."""
+    insp = inspect(engine)
+    with engine.begin() as conn:
+        for table in Base.metadata.sorted_tables:
+            if not insp.has_table(table.name):
+                continue
+            existing = {c["name"] for c in insp.get_columns(table.name)}
+            for col in table.columns:
+                if col.name in existing:
+                    continue
+                ddl_type = col.type.compile(dialect=engine.dialect)
+                conn.execute(text(f'ALTER TABLE {table.name} ADD COLUMN {col.name} {ddl_type}'))
+                if (table.name, col.name) in _BACKFILL:
+                    conn.execute(text(f"UPDATE {table.name} SET {col.name} = {_BACKFILL[(table.name, col.name)]} "
+                                      f"WHERE {col.name} IS NULL"))
+
+
 def init_db(reset: bool = False) -> None:
     engine = get_engine()
-    if reset:
-        Base.metadata.drop_all(engine)
+    if reset:  # wipes triage and chat data; login accounts survive a data reset
+        Base.metadata.drop_all(engine, tables=[t for t in Base.metadata.sorted_tables if t.name != "users"])
     Base.metadata.create_all(engine)
+    _migrate(engine)
 
 
 def reset_engine() -> None:

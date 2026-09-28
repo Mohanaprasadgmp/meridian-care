@@ -188,12 +188,15 @@ class ToolEnvironment:
         c, r = t.classification, self.request
         with _money_lock:
             prior = self.session.scalar(select(CourtesyCredit).where(
-                CourtesyCredit.customer_name == r.customer_name, CourtesyCredit.status.in_(["issued", "pending_approval"])))
-            decision = evaluate_credit(c, self.billing_amount, prior is not None, self.settings)
+                CourtesyCredit.customer_name == r.customer_name,
+                CourtesyCredit.status.in_(["issued", "pending_approval", "offered"])))
+            # A chat customer can confirm in the conversation, so a mismatched claim becomes an offer
+            decision = evaluate_credit(c, self.billing_amount, prior is not None, self.settings,
+                                       can_offer=(r.source == "chat" and r.conversation_id is not None))
             self.credit = decision
             rationale = (args.get("rationale") or "")[:1000]
-            if decision.outcome in ("issue", "pending_approval"):
-                status = "issued" if decision.outcome == "issue" else "pending_approval"
+            if decision.outcome in ("issue", "pending_approval", "offer"):
+                status = {"issue": "issued", "pending_approval": "pending_approval", "offer": "offered"}[decision.outcome]
                 self.session.add(CourtesyCredit(request_id=r.request_id, customer_name=r.customer_name,
                                                 amount=decision.amount, claimed_amount=c.claimed_amount, status=status,
                                                 decided_by="agent+policy", rationale=rationale))
@@ -202,6 +205,8 @@ class ToolEnvironment:
         result = decision.as_dict()
         result["next"] = {"issue": "Call acknowledge_request confirming the credited amount.",
                           "pending_approval": "Amount exceeds auto-cap; call route_request so Billing can approve.",
+                          "offer": "The claim differs from the verified record. The customer will be offered the verified "
+                                   "amount in chat. Call route_request; do not mention amounts in tenant_message.",
                           "deny": "Do not promise money. Call route_request with the failed checks in the internal note."}[decision.outcome]
         return result
 
@@ -219,6 +224,8 @@ class ToolEnvironment:
         msg = self._check_tenant_message(args.get("tenant_message", ""))
         note = (args.get("internal_note") or "")[:2000]
         status = RequestStatus.NEEDS_REVIEW if t.team == Team.HUMAN_TRIAGE else RequestStatus.ROUTED
+        if self.credit and self.credit.outcome == "offer" and t.team != Team.HUMAN_TRIAGE:
+            status = RequestStatus.AWAITING_CUSTOMER     # waiting for the customer to accept the offer
         self._apply_triage(t, status, t.team)
         self._record_action(ActionType.ROUTE, {"team": t.team.value, "priority": t.priority.value, "internal_note": note,
                                                "credit_outcome": self.credit.outcome if self.credit else None}, msg)

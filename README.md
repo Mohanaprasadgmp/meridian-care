@@ -1,5 +1,7 @@
 # Meridian Care — AI Triage Agent
 
+Two agents: a **Customer Interaction Agent** that chats with logged-in tenants and turns their messages into requests, and a **Triage Agent** that classifies, prioritises, routes and resolves them. The answer is posted back into the customer's own chat. A landing page offers customer and administrator portals. See [docs/ARCHITECTURE.md §2b](docs/ARCHITECTURE.md).
+
 A tool-using AI agent for Meridian Self Storage customer care. For every tenant request it:
 - classifies it, checks history, and pulls extra context when unsure
 - prioritises and routes it
@@ -19,8 +21,10 @@ python -m meridian check-llm   # verify endpoint, key, model and tool calling be
 .\run.ps1 reset          # create DB + ingest the seed CSVs
 .\run.ps1 triage         # run the agent over all pending requests
 .\run.ps1 eval           # score against data/gold_labels.csv -> eval/latest_eval.json
-.\run.ps1 app            # review console at http://localhost:8501
-.\run.ps1 test           # 53 tests: guardrails, protocol, failure handling, overrides
+python -m meridian create-user admin --role admin   # administrator login (password prompted, stored hashed)
+python -m meridian seed-demo-customers              # demo customer logins (passwords printed once)
+.\run.ps1 app            # review console at http://localhost:8501 (sign in with that account)
+.\run.ps1 test           # 75 tests: guardrails, protocol, failures, overrides, chat, 2-agent hand-off
 ```
 The CLI can also be called directly: `python -m meridian {init|ingest|run|eval|stats}` (set `PYTHONPATH=src`). `run --id TR-6057` triages a single request.
 

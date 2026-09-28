@@ -1,8 +1,10 @@
 """Human-in-the-loop operations. Every change is validated and written to the overrides audit log."""
 import re
 import threading
+from typing import Optional
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from .db import Action, CourtesyCredit, Override, Request, SessionLocal, utcnow
 from .models import Category, Priority, RequestStatus, Team
@@ -14,8 +16,10 @@ MAX_BODY = 5000
 _id_lock = threading.Lock()
 
 
-def create_request(customer_name: str, account_tier: str, body: str) -> str:
-    """Create a new tenant request (status 'new'); returns its id. The agent triages it separately."""
+def create_request(customer_name: str, account_tier: str, body: str, source: str = "csv",
+                   customer_user_id: Optional[int] = None, conversation_id: Optional[str] = None,
+                   intake_summary: Optional[str] = None) -> str:
+    """Create a new tenant request (status 'new'); returns its id. The Triage Agent processes it separately."""
     customer_name, body = " ".join(customer_name.split()), body.strip()
     if not customer_name or not body:
         raise ValueError("customer name and message are required")
@@ -23,14 +27,24 @@ def create_request(customer_name: str, account_tier: str, body: str) -> str:
         raise ValueError(f"name max 128 chars, message max {MAX_BODY} chars")
     if account_tier not in ACCOUNT_TIERS:
         raise ValueError(f"account tier must be one of {ACCOUNT_TIERS}")
-    with _id_lock, SessionLocal() as s:
-        nums = [int(m.group(1)) for (rid,) in s.execute(select(Request.request_id))
-                if (m := re.fullmatch(r"TR-(\d+)", rid))]
-        request_id = f"TR-{max(nums, default=6000) + 1}"
-        s.add(Request(request_id=request_id, customer_name=customer_name, account_tier=account_tier,
-                      source_status="new", status=RequestStatus.NEW.value, submitted_at=utcnow(), body=body))
-        s.commit()
-    return request_id
+    if source not in ("csv", "chat"):
+        raise ValueError("source must be 'csv' or 'chat'")
+    # Thread lock covers one process; the primary key + retry covers several processes/replicas
+    for _ in range(5):
+        with _id_lock, SessionLocal() as s:
+            nums = [int(m.group(1)) for (rid,) in s.execute(select(Request.request_id))
+                    if (m := re.fullmatch(r"TR-(\d+)", rid))]
+            request_id = f"TR-{max(nums, default=6000) + 1}"
+            s.add(Request(request_id=request_id, customer_name=customer_name, account_tier=account_tier,
+                          source_status="new", status=RequestStatus.NEW.value, submitted_at=utcnow(), body=body,
+                          source=source, customer_user_id=customer_user_id, conversation_id=conversation_id,
+                          intake_summary=intake_summary))
+            try:
+                s.commit()
+                return request_id
+            except IntegrityError:
+                s.rollback()
+    raise RuntimeError("could not allocate a request id")
 
 
 def _require(reviewer: str, reason: str) -> None:
@@ -99,8 +113,8 @@ def reverse_credit(credit_id: int, reviewer: str, reason: str) -> None:
 
 
 def approve_credit(credit_id: int, reviewer: str, reason: str) -> None:
-    _set_credit(credit_id, {"pending_approval"}, "issued", reviewer, reason)
+    _set_credit(credit_id, {"pending_approval", "offered"}, "issued", reviewer, reason)
 
 
 def reject_credit(credit_id: int, reviewer: str, reason: str) -> None:
-    _set_credit(credit_id, {"pending_approval"}, "rejected", reviewer, reason)
+    _set_credit(credit_id, {"pending_approval", "offered"}, "rejected", reviewer, reason)

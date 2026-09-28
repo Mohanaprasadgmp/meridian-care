@@ -22,6 +22,14 @@ def main(argv=None) -> int:
     e.add_argument("--out", type=Path)
     sub.add_parser("stats", help="print summary")
     sub.add_parser("check-llm", help="verify connectivity, auth and tool calling for the configured LLM")
+    u = sub.add_parser("create-user", help="create a login, or reset an existing user's password")
+    u.add_argument("username")
+    u.add_argument("--role", choices=["admin", "customer"], default="admin")
+    u.add_argument("--display-name", help="customers: tenant name exactly as on the billing record")
+    u.add_argument("--tier", choices=["Standard", "Business Elite"], default="Standard")
+    w = sub.add_parser("worker", help="run the background triage worker (claims new chat requests, replies in chat)")
+    w.add_argument("--once", action="store_true", help="process one batch and exit")
+    sub.add_parser("seed-demo-customers", help="create demo customer logins named after billing-record tenants")
     a = p.parse_args(argv)
     s = get_settings()
 
@@ -47,11 +55,63 @@ def main(argv=None) -> int:
         print_report(rep)
         if a.out:
             a.out.write_text(json.dumps(rep, indent=2, default=str), encoding="utf-8")
+    elif a.cmd == "worker":
+        from .agent.worker import Worker, run_once
+        init_db()
+        if a.once:
+            print(json.dumps(run_once(s)))
+        else:
+            print(f"worker running (sources={s.worker_sources}, poll={s.worker_poll_s}s) - Ctrl+C to stop")
+            wk = Worker(s).start()
+            try:
+                wk.thread.join()
+            except KeyboardInterrupt:
+                wk.stop()
+    elif a.cmd == "seed-demo-customers":
+        return seed_demo_customers()
     elif a.cmd == "check-llm":
         return check_llm(s)
+    elif a.cmd == "create-user":
+        import getpass
+        from .auth import upsert_user
+        init_db()
+        pw = getpass.getpass("Password (min 8 chars, hidden): ")
+        if pw != getpass.getpass("Repeat password: "):
+            print("Passwords do not match.")
+            return 1
+        try:
+            created = upsert_user(a.username, pw, role=a.role, display_name=a.display_name,
+                                  account_tier=a.tier if a.role == "customer" else None)
+        except ValueError as e:
+            print(f"Error: {e}")
+            return 1
+        print(f"User '{a.username.strip().lower()}' {'created' if created else 'password updated'}.")
     elif a.cmd == "stats":
         from .evaluation import summary
         print(json.dumps(summary(), indent=2))
+    return 0
+
+
+DEMO_CUSTOMERS = [  # tenants that exist in the billing records, so the courtesy-credit path can be demoed
+    ("desmond", "Desmond Okafor", "Standard"), ("naomi", "Naomi Fitzwilliam", "Standard"),
+    ("perpetua", "Perpetua Lindqvist", "Standard"), ("corinne", "Corinne Vantassel", "Business Elite"),
+]
+
+
+def seed_demo_customers() -> int:
+    """Passwords are random and printed once; only their hashes are stored."""
+    import secrets
+    import string
+    from .auth import upsert_user
+    from .db import init_db
+    init_db()
+    alphabet = string.ascii_letters + string.digits
+    print("username    password              tenant name")
+    for username, name, tier in DEMO_CUSTOMERS:
+        pw = "Tenant-" + "".join(secrets.choice(alphabet) for _ in range(8))
+        upsert_user(username, pw, role="customer", display_name=name, account_tier=tier)
+        print(f"{username:<11} {pw:<21} {name} ({tier})")
+    print("Save these now: they are not stored in readable form.")
     return 0
 
 
